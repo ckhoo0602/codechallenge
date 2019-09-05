@@ -1,3 +1,3 @@
 #mvn clean install
-java -jar api/target/api-0.1.jar
-java -jar webapp/target/webapi-0.1.jar
+nohup java -jar api/target/api-0.1.jar > api.out &
+nohup java -jar webapp/target/webapp-0.1.jar > web.out &
