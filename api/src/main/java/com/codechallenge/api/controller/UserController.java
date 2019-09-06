@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -81,7 +82,21 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         user.setName(updateUserReq.getName());
-        user.setEmail(updateUserReq.getEmail());
+        if (updateUserReq.getAddress() != null) {
+            UserAddress address = Optional.ofNullable(user.getAddress()).orElse(new UserAddress());
+            address.setCity(updateUserReq.getAddress().getCity());
+            address.setStreet(updateUserReq.getAddress().getStreet());
+            address.setSuite(updateUserReq.getAddress().getSuite());
+            address.setZipcode(updateUserReq.getAddress().getZipcode());
+            UserAddress.Geo geo = Optional.ofNullable(address.getGeo()).orElse(new UserAddress.Geo());
+            if (updateUserReq.getAddress().getGeo() != null) {
+                geo.setLat(updateUserReq.getAddress().getGeo().getLat());
+                geo.setLng(updateUserReq.getAddress().getGeo().getLng());
+            }
+            address.setGeo(geo);
+            address.setUser(user);
+            user.setAddress(address);
+        }
         userService.update(user);
         return ResponseEntity.ok().build();
     }

@@ -11,8 +11,21 @@ public class UpdateUserReq {
 
     @NotBlank(message = "Name is mandatory")
     private String name;
+    private Address address;
 
-    @NotBlank(message = "Email is mandatory")
-    private String email;
+    @Data
+    public static final class Address {
+        private String street;
+        private String suite;
+        private String city;
+        private String zipcode;
+        private Geo geo;
+
+        @Data
+        public static final class Geo {
+            private String lat;
+            private String lng;
+        }
+    }
 
 }
